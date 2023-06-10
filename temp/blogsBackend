@@ -1,0 +1,93 @@
+#!/usr/bin/env bash
+
+# stop on errors
+set -e
+
+# to echo
+# set -x
+
+usage () {
+  echo "patientor <command>"
+  echo ""
+  echo "Commands:"
+  echo "---------"
+  echo "up              | builds the production docker container"
+  echo "down            | shuts down the container"
+  echo "down:dev        | shuts down the development container and removes all volumes and orphans"
+  echo "up:dev          | builds the developmnent container"
+  echo "restart         | restarts the production container without building"
+  echo "restart:dev     | restarts the developmnent container without building"
+  echo "server:bash     | opens a bash session in the server" 
+  echo "db:post         | opens a cli for postgress commands"
+  # echo "api:cop         | runs rubocop for API"
+  # echo "build           | applies docker compose to start the API stack"
+  # echo "db:init         | sets up the development database; will delete the existing data if it exists"
+  # echo "db:shell        | opens a mysql shell on the mariadb container"
+  # echo "getSecrets      | generally one-time S3 download of any dev secrets files - requires AWS profile and access key"
+  # echo "log             | tail the production log"
+  # echo "reset           | deletes the docker images for the API and DB"
+  # echo "server          | starts the development server"
+  # echo "ui:bash         | opens a bash shell on the EmberJS client container"
+  # echo "ui:test         | runs test suite for UI"
+  # echo "ui:fixtures     | builds and lints the fixtures"
+  # echo "ui:watch-css    | builds and watches css"
+}
+
+if [ -z $1 ]
+then
+  usage
+  exit 0
+fi
+
+COMMAND=$1
+
+shift
+
+REST_ARGS=$*
+
+PROJECT=patientor
+API="${PROJECT}-web-1"
+UI="${PROJECT}-ux-1"
+DB="${PROJECT}-db-1"
+ADMINER="${PROJECT}-adminer-1"
+
+up () {
+  docker compose up --build
+}
+
+up:dev () {
+  docker compose -f docker-compose.dev.yml up --build
+}
+
+restart:dev () {
+  docker compose -f docker-compose.dev.yml up
+}
+
+down () {
+  docker compose down
+}
+
+down:dev () {
+  docker compose -f docker-compose.dev.yml down --volumes --remove-orphans
+}
+
+
+server:bash () {
+  docker exec -it bloglist-backend  bash
+}
+
+restart () {
+  docker compose -f docker-compose.yml up
+}
+
+db:postgres () {
+  docker exec -it temp-db-1 psql -U postgres postgres
+}
+
+case $COMMAND in
+  up|up:dev|restart:dev|down|down:dev|db:postgres|server:bash|restart)
+      $COMMAND;;
+  *)
+      usage
+      exit 1;;
+esac
