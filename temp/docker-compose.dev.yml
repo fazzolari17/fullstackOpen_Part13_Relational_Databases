@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+
+  db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: mysecretpassword
+    volumes:
+      - ./postgres-data:/usr/src/app/postgresql/data
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+
+
+  app-backend:
+    image: bloglist-backend
+    build:
+      context: ./
+      dockerfile: ./dev.Dockerfile
+    ports:
+      - 3005:3005
+    env_file: 
+      - .env
+    volumes:
+      - ./:/usr/src/app
+    container_name: bloglist-backend
+  
