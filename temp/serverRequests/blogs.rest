@@ -1,0 +1,29 @@
+@PORT=3005
+@ID=4
+
+###
+# Health check
+GET http://localhost:{{PORT}}/api/health
+
+###
+# Get all blogs 
+GET http://localhost:{{PORT}}/api/blogs
+
+
+###
+# Create new blog
+POST http://localhost:{{PORT}}/api/blogs
+Content-Type: application/json
+
+{
+  "author":  "New Author",
+  "url": "www.new-url.com",
+  "title": "new title",
+  "likes": "0"
+
+}
+
+###
+# Delete blog
+DELETE  http://localhost:{{PORT}}/api/blogs/{{ID}}
+
