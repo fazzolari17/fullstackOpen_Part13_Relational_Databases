@@ -1,22 +1,28 @@
-import dotenv from 'dotenv';
-dotenv.config();
-import { Sequelize } from 'sequelize';
-import express, { json } from 'express';
-import blogRouter from './controllers/blog.js';
+const express = require('express');
+const { json } = require('express');
+const { PORT } = require('./util/config.js');
+const { connectToDatabase } = require('./util/db.js');
+const blogRouter = require('./controllers/blog.js');
+const middleware = require('./util/middleware.js');
+require('express-async-errors');
 const app = express();
 
 app.use(json());
-app.use(blogRouter)
+app.use(middleware.requestLogger);
 
-// const sequelize = new Sequelize(process.env.DATABASE_URL);
+app.use('/api/blogs/', blogRouter);
+
+app.use(middleware.unknownEndpoint);
 
 app.get('/api/health', (req, res) => {
   res.status(200).send({ status: 200, health: 'ok' })
-})
+});
 
-const PORT = process.env.PORT || 3001;
+const start = async () => {
+  await connectToDatabase();
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+  })
+};
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-})
-
+start()

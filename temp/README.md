@@ -1,15 +1,19 @@
-Exercise 13.3 is done by building the docker conrtainer for the database with the command 
+Exercise 13.3 is done by building the docker container for the database with the command 
 
   - ./blogsBackend exrcise13.3-db:run
 
 and oncde the container is built and runnning you will run 
 
-  - node main.js
+  - node cli.js
 
 now the exercise will be satisfied.
 Once complete you can remove the container with one last command.
 
   - ./blogsBackend exrcise13.3-db:down
+
+This will not work if the main docker container has been built and is running this is only to satisfy the exercise without building the main application. If the main application is running the you will only need to run 
+
+  - node cli.js
 
 --------------------------------
 ----- TO RUN THE MAIN FILE -----

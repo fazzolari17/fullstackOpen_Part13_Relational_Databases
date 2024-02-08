@@ -10,8 +10,8 @@ services:
     environment:
       POSTGRES_PASSWORD: mysecretpassword
     volumes:
-      # - ./postgres-data:/usr/src/app/postgresql/data
-      - ./commands.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./postgres-data:/usr/src/app/postgresql/data
+      # - ./commands.sql:/docker-entrypoint-initdb.d/init.sql
 
 
   adminer:
@@ -31,6 +31,6 @@ services:
     env_file: 
       - .env
     volumes:
-      - ./:/usr/src/app
+      - .:/usr/src/app
     container_name: bloglist-backend
   

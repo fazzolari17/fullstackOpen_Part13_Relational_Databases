@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "description": "This a postgresql database for the Full Stack Open part 5 frontend",
   "main": "index.js",
-  "type": "module",
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js",
@@ -17,6 +16,7 @@
   "dependencies": {
     "dotenv": "^16.1.4",
     "express": "^4.18.2",
+    "express-async-errors": "^3.1.1",
     "pg": "^8.11.0",
     "sequelize": "^6.32.0"
   }

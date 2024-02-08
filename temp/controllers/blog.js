@@ -1,9 +1,31 @@
-import Blog from '../models/blog.js';
-import express from 'express';
+// import express from 'express';
+// import { Blog } from '../models/index.js';
+// import { blogFinder } from '../util/middleware.js';
+const express = require('express');
+const { Blog } = require('../models/index.js');
+const { blogFinder, blogChecker } = require('../util/middleware.js');
 
 const blogRouter = express.Router();
 
-blogRouter.get('/api/blogs', async (req, res) => {
+blogRouter.put('/:id', blogFinder, async (req, res) => {
+  const { blog } = req;
+  blog.likes + 1;
+  await blog.save()
+
+  res.status(200).json({ likes: blog.likes })
+})
+
+blogRouter.get('/:id', blogFinder, async (req, res) => {
+  try {
+    const { blog } = req;
+    res.status(200).send(blog)
+    
+  } catch (error) {
+    res.status(400).send({ error });
+  }
+})
+
+blogRouter.get('/', async (req, res) => {
   try {
     const blogs = await Blog.findAll();
     console.log(JSON.stringify(blogs, null, 2));
@@ -13,26 +35,25 @@ blogRouter.get('/api/blogs', async (req, res) => {
   }
 });
 
-blogRouter.post('/api/blogs', async (req, res) => {
+blogRouter.post('/', blogChecker, async (req, res) => {
   try {
-    console.log(req.body);
-
+    console.log('inside post')
     const blog = Blog.build(req.body);
-
+    console.log(blog)
     await blog.save();
-
+  
     return res.status(200).json(blog);
+    
   } catch (error) {
-    return res.status(400).json({ error });
+    console.log('catch bloack ran')
+    console.log(error)
   }
 });
 
-blogRouter.delete('/api/blogs/:id', async (req, res) => {
+blogRouter.delete('/:id', blogFinder, async (req, res) => {
   try {
-    console.log(req.params)
-    const { id } = req.params;
-    console.log(req.params.id)
-    const blog = await Blog.destroy({ where: { id: id } });
+    let blog = req.blog
+    blog = await Blog.destroy({ where: { id: blog.id } });
 
     res.status(200).json({"message": `Blog with an ID of ${id} has been deleted successfully.`});
   } catch (error) {
@@ -40,4 +61,4 @@ blogRouter.delete('/api/blogs/:id', async (req, res) => {
   }
 });
 
-export default blogRouter;
+module.exports = blogRouter;

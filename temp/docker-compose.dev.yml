@@ -10,10 +10,9 @@ services:
     environment:
       POSTGRES_PASSWORD: mysecretpassword
     volumes:
-      # - ./postgres-data:/usr/src/app/postgresql/data
       - ./commands.sql:/docker-entrypoint-initdb.d/init.sql
 
-
+      
   adminer:
     image: adminer
     restart: always
@@ -23,6 +22,8 @@ services:
 
   app-backend:
     image: bloglist-backend
+    depends_on:
+      - db
     build:
       context: ./
       dockerfile: ./dev.Dockerfile
@@ -31,6 +32,6 @@ services:
     env_file: 
       - .env
     volumes:
-      - ./:/usr/src/app
+      - .:/usr/src/app
     container_name: bloglist-backend
   

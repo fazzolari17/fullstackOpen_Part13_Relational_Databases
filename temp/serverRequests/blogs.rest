@@ -1,5 +1,5 @@
 @PORT=3005
-@ID=5
+@ID=10
 
 ###
 # Health check
@@ -20,10 +20,25 @@ Content-Type: application/json
   "url": "www.new-url.com",
   "title": "new title",
   "likes": "0"
+}
 
+###
+# Error Testing creating new blog that is malformed
+POST http://localhost:{{PORT}}/api/blogs
+Content-Type: application/json
+
+{
+  "author":  "New Author",
+  "title": "new title",
+  "likes": "0"
 }
 
 ###
 # Delete blog
 DELETE  http://localhost:{{PORT}}/api/blogs/{{ID}}
+
+
+###
+# Add  likes to blog
+PUT http://localhost:{{PORT}}/api/blogs/{{ID}}
 

@@ -1,13 +1,10 @@
-import dotenv from 'dotenv';
-dotenv.config();
-
-import { Sequelize, Model, DataTypes } from 'sequelize';
-
-const sequelize = new Sequelize(process.env.DOCKER_DATABASE_URL);
+const { Model, DataTypes } = require('sequelize');
+// import { sequelize } from '../util/db.js';
+const { sequelize } = require('../util/db.js');
 
 class Blog extends Model {}
 
-export default Blog.init(
+module.exports = Blog.init(
   {
     id: {
       type: DataTypes.INTEGER,
