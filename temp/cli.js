@@ -1,5 +1,6 @@
-require('dotenv').config();
-const { Sequelize, QueryTypes, Model, DataTypes } = require('sequelize');
+import dotenv from 'dotenv';
+dotenv.config();
+import { Sequelize, QueryTypes, Model, DataTypes } from 'sequelize';
 
 const sequelize = new Sequelize(process.env.DATABASE_URL_MAIN);
 
@@ -40,15 +41,24 @@ const main = async () => {
   try {
     await sequelize.authenticate();
     console.log('Connection has been established successfully.');
-    // await blogs.sync()
+    // console.log('Executing (default): SELECT * FROM blogs')
+    // const blogs = JSON.stringify(await Blog.findAll(), null, 2)
     const blogs = await sequelize.query('SELECT * FROM blogs', {
       type: QueryTypes.SELECT,
     });
 
-    console.log(blogs);
+    const print = (i) => console.log(i);
+    for (let i = 0; i < blogs.length; i++) {
+      console.log(`${blogs[i].author}: ${blogs[i].title}, ${blogs[i].likes} likes`)
+    }
+
+    // const blogs = await sequelize.query('SELECT * FROM blogs', {
+    //   type: QueryTypes.SELECT,
+    // });
+
+    // console.log(blogs);
 
     sequelize.close();
-
   } catch (error) {
     console.error('Unable to connect to the database:', error);
   }

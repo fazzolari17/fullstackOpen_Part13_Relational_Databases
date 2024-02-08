@@ -11,15 +11,17 @@ usage () {
   echo ""
   echo "Commands:"
   echo "---------"
-  echo "up              | builds the production docker container"
-  echo "down            | shuts down the container"
-  echo "down:dev        | shuts down the development container and removes all volumes and orphans"
-  echo "up:dev          | builds the developmnent container"
-  echo "restart         | restarts the production container without building"
-  echo "restart:dev     | restarts the developmnent container without building"
-  echo "server:bash     | opens a bash session in the server" 
-  echo "db:post         | opens a cli for postgress commands"
-  # echo "api:cop         | runs rubocop for API"
+  echo "up                        | builds the production docker container"
+  echo "down                      | shuts down the container"
+  echo "down:dev                  | shuts down the development container and removes all volumes and orphans"
+  echo "up:dev                    | builds the developmnent container"
+  echo "restart                   | restarts the production container without building"
+  echo "restart:dev               | restarts the developmnent container without building"
+  echo "server:bash               | opens a bash session in the server" 
+  echo "db:post                   | opens a cli for postgress commands"
+  echo "exercise13.3-db:postgres  | opens cli for postgres commands for exercise 13 database"
+  echo "exercise13.3-db:run       | builds and runs the comtainer for postgres db for exercise 13"
+  echo "exercise13.3-db:down      | removes the docker container for the db for exercise 13"
   # echo "build           | applies docker compose to start the API stack"
   # echo "db:init         | sets up the development database; will delete the existing data if it exists"
   # echo "db:shell        | opens a mysql shell on the mariadb container"
@@ -84,8 +86,44 @@ db:postgres () {
   docker exec -it temp-db-1 psql -U postgres postgres
 }
 
+exercise13.3-db:postgres () {
+  docker exec -it exercise13.3-db psql -U postgres postgres
+}
+
+exercise13.3-db:down () {
+  docker rm exercise_13.3-db
+  docker rmi -f exercise_13.3-db
+}
+
+db:init () {
+  exercise13.3-db:
+}
+
+exercise13.3-db:build () {
+  # docker run --name exercise13.3-db -e POSTGRES_PASSWORD=mysecretpassword -p 5432:5432 -v postgres-data:/usr/src/app/postgresql/data postgres
+  docker build -f exercise_13.Dockerfile -t exercise_13.3-db .
+  # wait
+  # docker run --name exercise13.3-db -e POSTGRES_PASSWORD=mysecretpassword -p 5432:5432 postgres
+
+}
+exercise13.3-db:run () {
+  exercise13.3-db:build
+
+  wait
+
+  docker run --name exercise13.3-db -e POSTGRES_PASSWORD=mysecretpassword -p 5432:5432 exercise_13.3-db
+
+}
+
+
+exercise13.3-db:down () {
+  docker rm -f exercise_13.3-db
+  docker rmi -f exercise_13.3-db
+}
+
+
 case $COMMAND in
-  up|up:dev|restart:dev|down|down:dev|db:postgres|server:bash|restart)
+  up|up:dev|restart:dev|down|down:dev|db:postgres|server:bash|restart|exercise13.3-db|exercise13.3-db:down|exercise13.3-db:postgres|exercise13.3-db:run|exercise13.3-db:down)
       $COMMAND;;
   *)
       usage

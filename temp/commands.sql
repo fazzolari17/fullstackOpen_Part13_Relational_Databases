@@ -1,5 +1,7 @@
+-- init.sql
+
 -- Create blog table 
-CREATE TABLE blogs (
+CREATE TABLE IF NOT EXISTS blogs (
   id SERIAL PRIMARY KEY,
   author TEXT,
   url TEXT NOT NULL,
@@ -8,7 +10,10 @@ CREATE TABLE blogs (
 );
 
 -- insert first blog
-insert into blogs (author, url, title) values ('Some Author', 'www.someurl.com', 'some title');
+INSERT INTO blogs (author, url, title) VALUES 
+  ('Dan Abromov', 'www.DanAbromov.com', 'On let vs const'),
+  ('Laurenz Albe', 'www.LaurenzAlbe.com', 'Gaps in sequences in PostgreSQL');
 
 -- insert second blog
-insert into blogs (author, url, title) values ('Author Two', 'www.someurl2.com', 'second Title');
+-- INSERT INTO blogs (author, url, title) VALUES (
+--   'Author Two', 'www.someurl2.com', 'second Title');

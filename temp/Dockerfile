@@ -2,9 +2,12 @@ FROM node:16
 
 WORKDIR /usr/src/app
 
+COPY package*.json .
+
+RUN ls -al   # Debugging output
+
+RUN npm install
+
 COPY . .
 
-RUN npm install && \
-  npm run build 
-
-CMD ["serve", "-s", "build"]
+CMD ["node", "index.js"]
