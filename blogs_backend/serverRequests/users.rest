@@ -1,0 +1,45 @@
+@PORT={{$dotenv PORT}}
+@BASE_URL=http://localhost:{{PORT}}
+@ID=10
+@USERNAME=Created_User_Name
+
+###
+# Health check (SANITY CHECK)
+GET {{BASE_URL}}/api/health
+
+###
+# Get all users
+GET {{BASE_URL}}/api/users
+
+###
+# Create New User
+POST {{BASE_URL}}/api/users
+Content-Type: application/json
+# password hash is sekret
+
+{
+  "name": "Created User 3",
+  "username": "Created_User_Name_3@gmail.com",
+  "hashedPassword": "$2b$10$O/nOYtQ60Qz16cDfLsJ6U.f1BBQMdLmMjH2A6npJKG8Ile1dKbrKa"
+}
+
+###
+# Create New User with incorrect username
+POST {{BASE_URL}}/api/users
+Content-Type: application/json
+# password hash is sekret
+
+{
+  "name": "Created User",
+  "username": "Created_User_Name",
+  "hashedPassword": "$2b$10$O/nOYtQ60Qz16cDfLsJ6U.f1BBQMdLmMjH2A6npJKG8Ile1dKbrKa"
+}
+
+###
+# Get a user by username
+PUT {{BASE_URL}}/api/users/{{USERNAME}}
+Content-Type: application/json
+
+{
+  "username": "Created_User_Name@gmail.com"
+}

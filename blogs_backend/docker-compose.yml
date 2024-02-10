@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+
+  db:
+    container_name: db-1
+    image: postgres
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_PASSWORD: mysecretpassword
+    volumes:
+      # - ./postgres-data/init.sql:/docker-entrypoint-initdb.d/init.sql
+      # - ./postgres-data:/usr/src/app/postgresql/data
+      - postgres-data:/var/lib/postgresql/data
+      - ./postgres-data/backup.sql:/docker-entrypoint-initdb.d/backup.sql
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+
+
+  app-backend:
+    image: bloglist-backend
+    build:
+      context: ./
+      dockerfile: ./Dockerfile
+    ports:
+      - 3005:3005
+    env_file: 
+      - .env
+    volumes:
+      - .:/usr/src/app
+    container_name: bloglist-backend
+
+volumes:
+   postgres-data: 

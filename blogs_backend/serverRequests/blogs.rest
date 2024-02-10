@@ -1,0 +1,66 @@
+@PORT={{$dotenv PORT}}
+@BASE_URL=http://localhost:{{PORT}}
+@ID=8
+
+###
+# Login References and the auth token that is returned when logged in and is needed for the application 
+# log in first before attempting to access routes that are protected.
+@USERNAME={{$dotenv USERNAME}}
+@PASSWORD={{$dotenv PASSWORD}}
+@TOKEN=bearer {{loginLocal.response.body.token}}
+
+###
+# Health check (SANITY CHECK)
+GET {{BASE_URL}}/api/health
+
+###
+# @name loginLocal
+# Login
+POST {{BASE_URL}}/api/login
+Content-Type: application/json
+
+{
+  "username": "{{USERNAME}}",
+  "password": "{{PASSWORD}}"
+}
+
+###
+# Get all blogs 
+GET {{BASE_URL}}/api/blogs
+Authorization: {{TOKEN}}
+
+
+###
+# Create new blog
+POST {{BASE_URL}}/api/blogs
+Content-Type: application/json
+Authorization: {{TOKEN}}
+
+{
+  "author":  "New Author With Token",
+  "url": "www.new-url.com",
+  "title": "new title With Token",
+  "likes": "0"
+}
+
+###
+# Error Testing creating new blog that is malformed
+POST {{BASE_URL}}/api/blogs
+Content-Type: application/json
+
+{
+  "author":  "New Author",
+  "title": "new title",
+  "likes": "0"
+}
+
+###
+# Delete blog
+DELETE  {{BASE_URL}}/api/blogs/{{ID}}
+Authorization: {{TOKEN}}
+
+
+###
+# Add  likes to blog
+PUT {{BASE_URL}}/api/blogs/{{ID}}
+
