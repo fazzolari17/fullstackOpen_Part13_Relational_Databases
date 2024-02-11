@@ -1,12 +1,14 @@
 const express = require('express');
 const { Blog, User } = require('../models/index.js');
 const { blogFinder, blogChecker } = require('../util/middleware.js');
+const { Op } = require('sequelize');
 
 const blogRouter = express.Router();
 
 blogRouter.put('/:id', blogFinder, async (req, res) => {
   const { blog } = req;
-  blog.likes + 1;
+  console.log(blog)
+  blog.likes = blog.likes + 1;
   await blog.save()
 
   res.status(200).json({ likes: blog.likes })
@@ -18,12 +20,42 @@ blogRouter.get('/:id', blogFinder, async (req, res) => {
 })
 
 blogRouter.get('/', async (req, res) => {
-  const blogs = await Blog.findAll({
-    include: {
-        model: User
-      }
+  let blogs = null;
+  if (req.query.search) {
+    blogs = await Blog.findAll({
+      order: [['likes', 'DESC']],
+      attributes: { exclude: ['userId'] },
+      include: {
+        model: User,
+        attributes: ['name'],
+      },
+      where: {
+        [Op.or]: [
+          {
+            author: {
+              [Op.iLike]: req.query.search ? `%${req.query.search}%` : '',
+            },
+          },
+          {
+            title: {
+              [Op.iLike]: req.query.search ? `%${req.query.search}%` : '',
+            },
+          },
+        ],
+      },
     });
-    res.status(200).json(blogs);
+  } else {
+    blogs = await Blog.findAll({
+      order: [['likes', 'DESC']],
+      attributes: { exclude: ['userId'] },
+      include: {
+        model: User,
+        attributes: ['name']
+      },
+    });
+  }
+
+  res.status(200).json(blogs);
 });
 
 blogRouter.post('/', blogChecker, async (req, res) => {

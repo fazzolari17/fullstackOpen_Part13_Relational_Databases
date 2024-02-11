@@ -1,6 +1,6 @@
 @PORT={{$dotenv PORT}}
 @BASE_URL=http://localhost:{{PORT}}
-@ID=8
+@ID=3
 
 ###
 # Login References and the auth token that is returned when logged in and is needed for the application 
@@ -26,7 +26,7 @@ Content-Type: application/json
 
 ###
 # Get all blogs 
-GET {{BASE_URL}}/api/blogs
+GET {{BASE_URL}}/api/blogs/
 Authorization: {{TOKEN}}
 
 
@@ -37,9 +37,9 @@ Content-Type: application/json
 Authorization: {{TOKEN}}
 
 {
-  "author":  "New Author With Token",
-  "url": "www.new-url.com",
-  "title": "new title With Token",
+  "author": "root user",
+  "url": "www.react-blog.com",
+  "title": "a second blog with react in the title",
   "likes": "0"
 }
 
@@ -63,4 +63,5 @@ Authorization: {{TOKEN}}
 ###
 # Add  likes to blog
 PUT {{BASE_URL}}/api/blogs/{{ID}}
+Authorization: {{TOKEN}}
 

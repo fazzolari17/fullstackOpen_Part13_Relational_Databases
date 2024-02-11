@@ -14,12 +14,17 @@ userRouter.get('/', async (req, res) => {
 })
 
 userRouter.post('/', async (req, res, next) => {
-  const existingUser = await User.findOne({ where: { username: req.body.username }})
+  const { name, username, password } = req.body;
+  const existingUser = await User.findOne({ where: { username: username }})
 
   if (existingUser) {
     res.status(409).json({ error: 'User already exists log in instead' })
   } else if (!existingUser) {
-    const user = await User.create(req.body)
+
+    const saltRounds = 10;
+    const passwordHash = await bcrypt.hash(password, saltRounds);
+
+    const user = await User.create({ name, username, hashedPassword: passwordHash })
     return res.status(201).send({ message: 'User created successfully', user })
   }
 })
@@ -27,7 +32,6 @@ userRouter.post('/', async (req, res, next) => {
 userRouter.put('/:username', async (req, res) => {
   const user = await User.findOne({ where: { username: req.params.username } });
   
-  console.log(user)
   if (user) {
     const original = user
     user.username = req.body.username

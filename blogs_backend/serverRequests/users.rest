@@ -18,9 +18,9 @@ Content-Type: application/json
 # password hash is sekret
 
 {
-  "name": "Created User 3",
-  "username": "Created_User_Name_3@gmail.com",
-  "hashedPassword": "$2b$10$O/nOYtQ60Qz16cDfLsJ6U.f1BBQMdLmMjH2A6npJKG8Ile1dKbrKa"
+  "name": "Root User",
+  "username": "rootUser@gmail.com",
+  "password": "sekret"
 }
 
 ###

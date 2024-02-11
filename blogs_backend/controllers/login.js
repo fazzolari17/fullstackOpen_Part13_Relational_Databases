@@ -18,7 +18,6 @@ loginRouter.post('/', async (req, res) => {
       }
     })
   
-    console.log('PRINTES', user)
   
     const passwordCorrect =
       user === null

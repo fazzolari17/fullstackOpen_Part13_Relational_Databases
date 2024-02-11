@@ -27,7 +27,6 @@ const userExtractor = (
   response,
   next,
 ) => {
-  console.log('EXTRACTOR TOKEN:', request.token)
   const decodedToken = jwt.verify(request.token, SECRET);
 
   if (!decodedToken.id) {
@@ -44,7 +43,6 @@ const tokenExtractor = (
   _response,
   next,
 ) => {
-  console.log('tokenExtractor')
   const authorization = request.get('authorization');
 
   if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
