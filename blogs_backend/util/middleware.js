@@ -70,7 +70,8 @@ const blogChecker = (req, res, next) => {
 }
 
 const errorHandler = (error, request, response, next) => {
-  logger.error(error.messsage);
+  logger.error('___ERROR___', error);
+  // logger.error('___ERROR___', error.messsage);
 
   if (error.name === 'SequelizeValidationError') {
     response.status(400).send({ error: error.errors[0].message });

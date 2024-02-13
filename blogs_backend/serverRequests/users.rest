@@ -9,7 +9,17 @@ GET {{BASE_URL}}/api/health
 
 ###
 # Get all users
-GET {{BASE_URL}}/api/users
+GET {{BASE_URL}}/api/users/
+
+
+###
+# Returns the users entire reading list 
+GET {{BASE_URL}}/api/users/1
+
+###
+# Returns the users blogs that have been read 
+GET {{BASE_URL}}/api/users/1?read=true
+
 
 ###
 # Create New User
@@ -32,7 +42,7 @@ Content-Type: application/json
 {
   "name": "Created User",
   "username": "Created_User_Name",
-  "hashedPassword": "$2b$10$O/nOYtQ60Qz16cDfLsJ6U.f1BBQMdLmMjH2A6npJKG8Ile1dKbrKa"
+  "hashedPassword": "sekret"
 }
 
 ###

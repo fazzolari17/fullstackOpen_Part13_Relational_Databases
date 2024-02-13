@@ -12,25 +12,24 @@ module.exports = User.init(
     },
     name: {
       type: DataTypes.TEXT,
-      allowNull: false
+      allowNull: false,
     },
     username: {
       type: DataTypes.TEXT,
       allowNull: false,
       validate: {
-        isEmail: true
-      }
+        isEmail: true,
+      },
     },
     hashedPassword: {
       type: DataTypes.TEXT,
-      allowNull: false
-    }
+      allowNull: false,
+    },
   },
   {
     sequelize,
     underscored: true,
     timestamps: true,
-    // updatedAt: 'updateTimestamp',
     modelName: 'user',
   }
 );

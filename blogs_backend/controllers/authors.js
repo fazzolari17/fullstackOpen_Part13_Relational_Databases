@@ -1,6 +1,6 @@
 const express = require('express');
 const { Blog, User } = require('../models/index.js');
-const { blogFinder, blogChecker } = require('../util/middleware.js');
+// const { blogFinder, blogChecker } = require('../util/middleware.js');
 const { Op, fn, col, literal } = require('sequelize');
 // const { sequelize } = require('../util/db.js');
 

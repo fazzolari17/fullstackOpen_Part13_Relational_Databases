@@ -60,6 +60,11 @@ blogRouter.get('/', async (req, res) => {
 
 blogRouter.post('/', blogChecker, async (req, res) => {
   try {
+
+    if (req.body.yearWritten > new Date().getFullYear() | req.body.yearWritten < 1991) {
+      res.status(406).send({ error: 'the year written must be equal to or greater than 1991 and less than or equal to current year.' })
+    }
+    
     const blog = Blog.build({ ...req.body, userId: req.user });
     await blog.save();
   

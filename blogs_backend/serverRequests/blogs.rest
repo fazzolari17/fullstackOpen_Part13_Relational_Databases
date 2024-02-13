@@ -40,7 +40,8 @@ Authorization: {{TOKEN}}
   "author": "root user",
   "url": "www.react-blog.com",
   "title": "a second blog with react in the title",
-  "likes": "0"
+  "likes": "0",
+  "yearWritten": 2024
 }
 
 ###

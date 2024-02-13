@@ -1,0 +1,39 @@
+@PORT={{$dotenv PORT}}
+@BASE_URL=http://localhost:{{PORT}}
+@USERNAME={{$dotenv USERNAME}}
+@PASSWORD={{$dotenv PASSWORD}}
+@TOKEN=bearer {{login.response.body.token}}
+
+
+###
+# Health check (SANITY CHECK)
+GET {{BASE_URL}}/api/health
+
+###
+# @name login
+# Login
+POST {{BASE_URL}}/api/login
+Content-Type: application/json
+
+{
+  "username": "{{USERNAME}}",
+  "password": "{{PASSWORD}}"
+}
+
+###
+# Mark A Blog As Read
+PUT {{BASE_URL}}/api/readinglists/1
+Content-Type: application/json
+Authorization: {{TOKEN}}
+
+{ "read": true }
+
+###
+# Add Blog to readingList
+POST {{BASE_URL}}/api/readingLists
+Content-Type: application/json
+Authorization: {{TOKEN}}
+
+{
+  "blogId": 7
+}

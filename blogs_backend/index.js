@@ -3,9 +3,14 @@ require('express-async-errors');
 const { json } = require('express');
 const { PORT } = require('./util/config.js');
 const { connectToDatabase } = require('./util/db.js');
-const { authorRouter, blogRouter, userRouter, loginRouter } = require('./controllers');
-// const userRouter = require('./controllers/user.js');
-// const loginRouter = require('./controllers/login.js');
+const {
+  authorRouter,
+  blogRouter,
+  userRouter,
+  loginRouter,
+  readingListRouter
+} = require('./controllers');
+
 const middleware = require('./util/middleware.js');
 const app = express();
 
@@ -18,6 +23,7 @@ app.use('/api/authors/', authorRouter);
 app.use('/api/blogs/', middleware.userExtractor, blogRouter);
 app.use('/api/users', userRouter);
 app.use('/api/login/', loginRouter);
+app.use('/api/readinglists/', middleware.userExtractor, readingListRouter);
 app.get('/api/health', (req, res) => res.status(200).send({ status: 200, health: 'ok' }));
 
 app.use(middleware.errorHandler);

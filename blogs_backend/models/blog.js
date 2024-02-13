@@ -26,6 +26,13 @@ module.exports = Blog.init(
       type: DataTypes.INTEGER,
       defaultValue: 0,
     },
+    yearWritten: {
+      type: DataTypes.INTEGER,
+      validate: {
+        min: 1991,
+        max: new Date().getFullYear()
+      }
+    },
     userId: {
       type: DataTypes.INTEGER,
       references: {
