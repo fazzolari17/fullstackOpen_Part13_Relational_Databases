@@ -1,5 +1,9 @@
 # GETTING STARTED
 
+## In order to make this run, you will have to contact the creator and obtain the .env file. 
+  **It will not work without this file.**
+
+
 **Run the following command to display a list of commonly used commands available.**
 ``` bash
 ./blogsBackend -help
