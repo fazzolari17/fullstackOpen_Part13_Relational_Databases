@@ -21,10 +21,18 @@ const runMigrations = async () => {
   });
 }
 
+
 const connectToDatabase = async () => {
   try {
     await sequelize.authenticate()
-    await runMigrations()
+    const migrationsTableExists = await sequelize
+      .getQueryInterface()
+      .showAllTables()
+      .then((tables) => tables.includes('migrations'));
+    
+    if (!migrationsTableExists) {
+      await runMigrations()
+    }
     console.log('Connected to the database.')
   } catch (error) {
     console.log('DB CONNECTION ERROR: ', error)

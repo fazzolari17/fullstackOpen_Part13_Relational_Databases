@@ -3,11 +3,17 @@
 @USERNAME={{$dotenv USERNAME}}
 @PASSWORD={{$dotenv PASSWORD}}
 @TOKEN=bearer {{login.response.body.token}}
+login.response.headers.Set-Cookie
 
 
 ###
 # Health check (SANITY CHECK)
 GET {{BASE_URL}}/api/health
+
+###
+# Logout
+DELETE {{BASE_URL}}/api/logout
+
 
 ###
 # @name login

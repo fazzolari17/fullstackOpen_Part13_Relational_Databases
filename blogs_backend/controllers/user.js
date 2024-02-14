@@ -1,8 +1,9 @@
-const bcrypt = require('bcryptjs');
 const userRouter = require('express').Router();
-
 const { User, Blog, ReadingList } = require('../models/index.js');
-const { Op, literal } = require('sequelize');
+
+const bcrypt = require('bcryptjs');
+
+
 
 userRouter.get('/:id', async (req, res) => {
   const { id } = req.params;
@@ -26,8 +27,6 @@ userRouter.get('/:id', async (req, res) => {
 });
 
 userRouter.get('/', async (req, res) => {
-  console.log(req.params.id);
-  console.log(req.query.id);
   const users = await User.findAll({
     include: {
       model: Blog,

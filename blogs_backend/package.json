@@ -1,7 +1,7 @@
 {
   "name": "blogs_backend_sql",
   "version": "1.0.0",
-  "description": "This a postgresql database and backend server for the Full Stack Open part 5 frontend",
+  "description": "This a postgresql database and backend server for the Full Stack Open part 5 frontend. The current course is fullstack Relational Databases.",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
@@ -12,10 +12,11 @@
   "license": "ISC",
   "dependencies": {
     "bcryptjs": "^2.4.3",
+    "connect-session-sequelize": "^7.1.7",
     "dotenv": "^16.4.1",
     "express": "^4.18.2",
     "express-async-errors": "^3.1.1",
-    "jsonwebtoken": "^9.0.2",
+    "express-session": "^1.18.0",
     "pg": "^8.11.3",
     "sequelize": "^6.36.0",
     "umzug": "^3.6.1"

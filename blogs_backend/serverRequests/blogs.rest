@@ -11,6 +11,10 @@
 
 ###
 # Health check (SANITY CHECK)
+GET {{BASE_URL}}/api/testRoute
+###
+
+# Health check (SANITY CHECK)
 GET {{BASE_URL}}/api/health
 
 ###

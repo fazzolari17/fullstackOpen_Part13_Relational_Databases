@@ -1,23 +1,22 @@
-const jwt = require('jsonwebtoken');
-const bcrypt = require('bcryptjs');
 const loginRouter = require('express').Router();
-
-const { SECRET } = require('../util/config.js');
 const { User } = require('../models/index.js'); 
+const bcrypt = require('bcryptjs');
 
-loginRouter.post('/', async (req, res) => {
 
+// LOGIN
+loginRouter.post('/login', async (req, res) => {
   try {
     
-    const { username, password }= req.body;
-    console.log('USER NAME:', username)
-  
+    const { username, password } = req.body;
     const user = await User.findOne({
       where: {
-        username: username
+        username: username,
       }
     })
-  
+
+    if (user.isDisabled) {
+      res.status(401).send({ error: 'Your account has been disabled contact the site admin for further assistance.' });
+    }
   
     const passwordCorrect =
       user === null
@@ -30,18 +29,26 @@ loginRouter.post('/', async (req, res) => {
         error: 'Invalid username or password'
       })
     }
+
+    req.session.user = { username: user.username, id: user.id };
   
-    const userForToken = {
-      username: user.username,
-      id: user.id
-    }
-  
-    const token = jwt.sign(userForToken, SECRET);
-  
-    res.status(200).send({ token, username: user.username, name: user.name });
+    res.status(200).send({ message: `${user.name} has been successfully logged in.` });
   } catch (error) {
     console.error('CATCH: ', error)
   }
+})
+
+// LOGOUT
+loginRouter.delete('/logout', async (req, res) => {
+  if (req.session.user) {
+    const { username } = req.session.user;
+    req.session.destroy()
+    res.status(200).send({ message: `${username} has been successfully logged out.`})
+  } else {
+    res.status(400).send({ error: 'User must be logged in to perform this action.' })
+  }
+
+  
 })
 
 module.exports = loginRouter;

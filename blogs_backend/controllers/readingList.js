@@ -1,9 +1,6 @@
-const express = require('express');
-const { Blog, User, ReadingList } = require('../models/index.js');
-const { blogFinder, blogChecker } = require('../util/middleware.js');
-const { Op } = require('sequelize');
+const readingListRouter = require('express').Router();
+const { ReadingList } = require('../models/index.js');
 
-const readingListRouter = express.Router();
 
 readingListRouter.put('/:id', async (req, res) => {
   const { user } = req;
@@ -14,7 +11,6 @@ readingListRouter.put('/:id', async (req, res) => {
   })
 
   if (blogToMarkAsRead['userId'] === user) {
-    console.log('INDISE IF ')
     blogToMarkAsRead.read = req.body.read
     blogToMarkAsRead.save()
   } else if (blogToMarkAsRead['userId'] !== user) {
@@ -26,7 +22,6 @@ readingListRouter.put('/:id', async (req, res) => {
 readingListRouter.post('/', async (req, res) => {
   const { user, body } = req;
   const itemAddedToReadingList = ReadingList.build({ ...body, userId: user });
-  console.log('ITEM ADDED:', itemAddedToReadingList)
   await itemAddedToReadingList.save();
 
   return res.status(200).json(itemAddedToReadingList);

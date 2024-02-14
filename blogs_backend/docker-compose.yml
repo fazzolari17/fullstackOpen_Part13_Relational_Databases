@@ -11,10 +11,7 @@ services:
     environment:
       POSTGRES_PASSWORD: mysecretpassword
     volumes:
-      # - ./postgres-data/init.sql:/docker-entrypoint-initdb.d/init.sql
-      # - ./postgres-data:/usr/src/app/postgresql/data
       - postgres-data:/var/lib/postgresql/data
-      - ./postgres-data/backup.sql:/docker-entrypoint-initdb.d/backup.sql
 
   adminer:
     image: adminer

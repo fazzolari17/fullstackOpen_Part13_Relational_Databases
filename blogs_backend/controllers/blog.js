@@ -1,13 +1,12 @@
-const express = require('express');
+const blogRouter = require('express').Router();
 const { Blog, User } = require('../models/index.js');
 const { blogFinder, blogChecker } = require('../util/middleware.js');
 const { Op } = require('sequelize');
 
-const blogRouter = express.Router();
 
 blogRouter.put('/:id', blogFinder, async (req, res) => {
   const { blog } = req;
-  console.log(blog)
+
   blog.likes = blog.likes + 1;
   await blog.save()
 
@@ -60,7 +59,6 @@ blogRouter.get('/', async (req, res) => {
 
 blogRouter.post('/', blogChecker, async (req, res) => {
   try {
-
     if (req.body.yearWritten > new Date().getFullYear() | req.body.yearWritten < 1991) {
       res.status(406).send({ error: 'the year written must be equal to or greater than 1991 and less than or equal to current year.' })
     }
@@ -71,7 +69,6 @@ blogRouter.post('/', blogChecker, async (req, res) => {
     return res.status(200).json(blog);
     
   } catch (error) {
-    console.log('catch bloack ran')
     console.log(error)
   }
 });
@@ -81,7 +78,6 @@ blogRouter.delete('/:id', blogFinder, async (req, res) => {
     let blog = req.blog
 
     if (blog.userId === userId) {
-      console.log('if block ran')
       blog = await Blog.destroy({ where: { id: blog.id } });
       res.status(200).json({"message": `Blog with an ID of ${req.params.id} has been deleted successfully.`});
     } else {

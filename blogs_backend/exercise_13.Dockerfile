@@ -1,3 +1,3 @@
 FROM postgres
 
-COPY /postgres-data/*.sql /docker-entrypoint-initdb.d/
+COPY /postgres-data/exercise13-init.sql /docker-entrypoint-initdb.d/

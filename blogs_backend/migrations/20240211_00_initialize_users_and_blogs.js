@@ -64,6 +64,11 @@ module.exports = {
         type: DataTypes.TEXT,
         allowNull: false,
       },
+      is_disabled: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false
+      },
       created_at: {
         type: DataTypes.DATE,
         allowNull: false,

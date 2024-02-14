@@ -1,7 +1,25 @@
-const { Blog } = require('../models/index.js');
+const { Blog, User } = require('../models/index.js');
 const logger = require('./logger.js');
-const { SECRET } = require('./config.js');
-const jwt = require('jsonwebtoken');
+
+
+const isAuthenticated = async (req, res, next) => {
+
+  if (req.session.user) {
+    const user = await User.findByPk(req.session.user.id)
+
+    if (user.isDisabled) {
+      req.session.destroy();
+      res
+        .status(401)
+        .send({ error: 'Your account has been disabled contact the site admin for further assistance.' });
+    } else if (!user.isDisabled) {
+      next()
+    }
+  }
+
+  req.session.destroy();
+  res.status(401).send({ error: 'Session has ended user must login to continue.' })
+}
 
 const blogFinder = async (req, res, next) => {
   req.blog = await Blog.findByPk(req.params.id);
@@ -22,35 +40,6 @@ const requestLogger = (request, response, next) => {
   next();
 };
 
-const userExtractor = (
-  request,
-  response,
-  next,
-) => {
-  const decodedToken = jwt.verify(request.token, SECRET);
-
-  if (!decodedToken.id) {
-    return response.status(401).json({ error: 'token missing or invalid' });
-  } else {
-    request.user = decodedToken.id;
-  }
-
-  return next();
-};
-
-const tokenExtractor = (
-  request,
-  _response,
-  next,
-) => {
-  const authorization = request.get('authorization');
-
-  if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
-    request.token = authorization.substring(7);
-  }
-
-  next();
-};
 
 const unknownEndpoint = (request, response) => {
   response.status(404).send({ error: 'unknown endpoint' });
@@ -70,40 +59,20 @@ const blogChecker = (req, res, next) => {
 }
 
 const errorHandler = (error, request, response, next) => {
-  logger.error('___ERROR___', error);
-  // logger.error('___ERROR___', error.messsage);
+  logger.error(error);
 
   if (error.name === 'SequelizeValidationError') {
     response.status(400).send({ error: error.errors[0].message });
   }
-  // if (error.name === 'CastError') {
-  //   return response.status(400).send({
-  //     error: 'malformatted id',
-  //   });
-  // } else if (error.name === 'ValidationError') {
-  //   console.log('VALIDATION ERROR!!!')
-  //   return response.status(400).json({
-  //     error: error.message,
-  //   });
-  // } else if (error.name === 'JsonWebTokenError') {
-  //   return response.status(401).json({
-  //     error: 'invalid token',
-  //   });
-  // } else if (error.name === 'TokenExpiredError') {
-  //   return response.status(401).json({
-  //     error: 'token expired',
-  //   });
-  // }
 
   next(error);
 };
 
 module.exports = {
+  blogChecker,
   blogFinder,
+  errorHandler,
+  isAuthenticated,
   requestLogger,
   unknownEndpoint,
-  errorHandler,
-  blogChecker,
-  tokenExtractor,
-  userExtractor
 }

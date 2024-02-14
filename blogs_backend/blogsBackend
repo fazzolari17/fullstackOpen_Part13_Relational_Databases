@@ -4,7 +4,7 @@
 set -e
 
 # to echo
-# set -x
+set -x
 
 usage () {
   echo "patientor <command>"
@@ -18,22 +18,12 @@ usage () {
   echo "restart                   | restarts the production container without building"
   echo "restart:dev               | restarts the developmnent container without building"
   echo "server:bash               | opens a bash session in the server" 
+  echo "db:init                   | initialize database with init.sql file"
   echo "db:post                   | opens a cli for postgress commands"
   echo "exercise13.3-db:postgres  | opens cli for postgres commands for exercise 13 database"
   echo "exercise13.3-db:run       | builds and runs the container for postgres db for exercise 13"
   echo "exercise13.3-db:down      | removes the docker container for the db for exercise 13"
   echo "db:shell                  | opens a bash session for the database"
-  # echo "build           | applies docker compose to start the API stack"
-  # echo "db:init         | sets up the development database; will delete the existing data if it exists"
-  # echo "db:shell        | opens a mysql shell on the mariadb container"
-  # echo "getSecrets      | generally one-time S3 download of any dev secrets files - requires AWS profile and access key"
-  # echo "log             | tail the production log"
-  # echo "reset           | deletes the docker images for the API and DB"
-  # echo "server          | starts the development server"
-  # echo "ui:bash         | opens a bash shell on the EmberJS client container"
-  # echo "ui:test         | runs test suite for UI"
-  # echo "ui:fixtures     | builds and lints the fixtures"
-  # echo "ui:watch-css    | builds and watches css"
 }
 
 if [ -z $1 ]
@@ -48,7 +38,7 @@ shift
 
 REST_ARGS=$*
 
-PROJECT=patientor
+PROJECT=blogs_backend
 API="${PROJECT}-web-1"
 UI="${PROJECT}-ux-1"
 DB="${PROJECT}-db-1"
@@ -93,8 +83,18 @@ db:dump () {
   exercise13.3-db:down
 }
 
+db:bash () {
+  docker exec -it db-1 bash
+}
+
+db:init () {
+  docker cp "${PWD}/postgres-data/init.sql" db-1:docker-entrypoint-initdb.d
+  docker exec -i db-1 psql -U postgres -d postgres -a -f "docker-entrypoint-initdb.d/init.sql"
+}
+
+
 db:postgres () {
-  docker exec -it temp-db-1 psql -U postgres postgres
+  docker exec -it db-1 psql -U postgres postgres
 }
 
 exercise13.3-db:postgres () {
@@ -106,17 +106,10 @@ exercise13.3-db:down () {
   docker rmi -f exercise_13.3-db
 }
 
-db:init () {
-  exercise13.3-db:
-}
-
 exercise13.3-db:build () {
-  # docker run --name exercise13.3-db -e POSTGRES_PASSWORD=mysecretpassword -p 5432:5432 -v postgres-data:/usr/src/app/postgresql/data postgres
   docker build -f exercise_13.Dockerfile -t exercise_13.3-db .
-  # wait
-  # docker run --name exercise13.3-db -e POSTGRES_PASSWORD=mysecretpassword -p 5432:5432 postgres
-
 }
+
 exercise13.3-db:run () {
   exercise13.3-db:build
 
@@ -132,13 +125,11 @@ exercise13.3-db:down () {
   docker rmi -f exercise_13.3-db
 }
 
-db:bash () {
-  docker exec -it db-1 bash
-}
+
 
 
 case $COMMAND in
-  up|up:dev|restart:dev|down|down:dev|db:postgres|server:bash|restart|exercise13.3-db|exercise13.3-db:down|exercise13.3-db:postgres|exercise13.3-db:run|exercise13.3-db:down|db:bash|db:dump)
+  up|restart|down|up:dev|restart:dev|down:dev|db:postgres|server:bash|exercise13.3-db|exercise13.3-db:down|exercise13.3-db:postgres|exercise13.3-db:run|exercise13.3-db:down|db:bash|db:dump|db:init|db:postgres)
       $COMMAND;;
   *)
       usage

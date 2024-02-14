@@ -20,10 +20,16 @@ module.exports = User.init(
       validate: {
         isEmail: true,
       },
+      unique: true,
     },
     hashedPassword: {
       type: DataTypes.TEXT,
       allowNull: false,
+    },
+    isDisabled: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
     },
   },
   {
